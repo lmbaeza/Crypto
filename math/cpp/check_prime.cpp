@@ -1,4 +1,3 @@
-
 template<class T>
 bool is_prime(T number) {
     if(number <= 0) return false;
