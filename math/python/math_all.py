@@ -31,13 +31,24 @@ def divisors(number: int) -> List[int]:
 #   number = 100;
 #   ans = divisors(number) # [1, 100, 2, 50, 4, 25, 5, 20, 10]
 
-from math import gcd
+# from math import gcd
 # Usage:
 #   ans = gcd(100, 54)
 
+# Euclid's algorithm
+
+def gcd(a, b):
+    tmp = 0
+    while b > 0:
+        tmp = a
+        a = b
+        b = tmp % b
+    return a
+
+
 from math import gcd
 def lcm(a, b):
-    return (a*b)/gcd(a, b)
+    return (a*b)//gcd(a, b)
 
 # usage:
 #   ans = lcm(15, 25);
@@ -82,3 +93,28 @@ def sieve(number):
 #   n = 100;
 #   primes = sieve(n);
 #   {2, 3, 5, 7, ... 83, 89, 97}
+
+def xgcd(a, b):
+    if b == 0:
+        return a, 1, 0
+    x, xtmp, y, ytmp = 1, 0, 0, 1
+    while b != 0:
+        q = a // b
+        r = a - b * q
+        u = x - q * xtmp
+        v = y - q * ytmp
+        # Update a, b
+        a = b
+        b = r
+        # Update for next iteration
+        x = xtmp
+        xtmp = u
+        y = ytmp
+        ytmp = v
+    return  a, x, y
+
+# Space Complexity:  O(1)
+#  a*x + b*y = gcd(a, b)
+#  g = gcd(a, b)
+# Usage:
+#  g, x, y = xgcd(a, b)
