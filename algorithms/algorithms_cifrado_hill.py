@@ -44,7 +44,7 @@ class Matrix(object):
                 for i in range(0, self.row): self.M[i][i] = 1;
     
     def __mul__(self, other):
-        assert(self.col==other.row);
+        assert self.col==other.row
         product = Matrix( (self.row, other.col) )
         
         for i in range(0, self.row):
@@ -52,10 +52,11 @@ class Matrix(object):
                 for k in range(0, self.col):
                     #product.M[i][j] =(product.M[i][j]+self.M[i][k]*other.M[k][j])%MOD
                     product.M[i][j] += self.M[i][k] * other.M[k][j]
+                    
         return product
     
     def __add__(self, other):
-        assert(self.row==other.row and self.col==other.col)
+        assert self.row==other.row and self.col==other.col
         ans = Matrix( (self.row, self.col) ) 
         
         for i in range(0, self.row):
@@ -65,7 +66,7 @@ class Matrix(object):
         return ans
     
     def __sub__(self, other):
-        assert(self.row==other.row and self.col==other.col)
+        assert self.row==other.row and self.col==other.col
         ans = Matrix( (self.row, self.col) ) 
         
         for i in range(0, self.row):
@@ -73,6 +74,13 @@ class Matrix(object):
                 #ans.M[i][j] = (self.M[i][j] - other.M[i][j]) % MOD
                 ans.M[i][j] = self.M[i][j] - other.M[i][j]
         return ans
+    
+    def __mod__(self, mod):
+        assert type(mod) == type(int(1))
+        for i in range(0, self.row):
+            for j in range(0, self.col):
+                self.M[i][j] = self.M[i][j] % mod
+        return self
     
     def __repr__(self):
         return "Matrix<" + str(self.M) + ">"
@@ -84,16 +92,23 @@ class Matrix(object):
 
 def pair_to_matrix(txt):
     assert len(txt) == 2
+    mtx = [[], []]
+    mtx[0].append(ord(txt[0]) - ord('A'))
+    mtx[1].append(ord(txt[1]) - ord('A'))
+    return Matrix(mtx)
 
 
 def matrix_to_pair(matrix):
-    assert type(matrix) == type(Matrix) or type(matrix)==type(list())
+    assert type(matrix) == type(Matrix([[]])) or type(matrix)==type(list())
     M = []
-    if type(matrix) == type(Matrix):
+    if type(matrix) == type(Matrix([[]])):
         M = matrix.M
     else:
         M = matrix
-    
+    pair = ""
+    pair += chr(M[0][0] + ord('A'))
+    pair += chr(M[1][0] + ord('A'))
+    return pair
 
 class Task:
     @testcases
@@ -106,6 +121,11 @@ class Task:
         handle = Hill()
         encrypt = handle.encrypt(txt, key)
         print("Encrypt:", encrypt)
+        key_inverse = [
+            [5/9, -1/3],
+            [-2/9, 1/3]
+        ]
+        # Fail
         decrypt = handle.decrypt(encrypt, key)
         print("Decrypt:", decrypt)
 
@@ -114,14 +134,36 @@ class Hill:
     def encrypt(self, txt, key):
         if len(txt) & 1 > 0:
             txt += 'X'
-        
         n = len(txt)
+        mult = []
+        key = Matrix(key)
+        for i in range(1, n, 2):
+            element = key * pair_to_matrix(txt[i-1]+txt[i])
+            element = element % 26
+            mult.append(element)
+
         output = ""
-        for i in range(0, n, 2):
-            pass
+        for mtx in mult:
+            output += matrix_to_pair(mtx)
+        return output 
+
 
     def decrypt(self, encry, key):
-        return None
+        if len(encry) & 1 > 0:
+            encry += 'X'
+        n = len(encry)
+        mult = []
+        key = Matrix(key)
+        for i in range(1, n, 2):
+            element = key * pair_to_matrix(encry[i-1]+encry[i])
+            element = element % 26
+            mult.append(element)
+
+        output = ""
+        for mtx in mult:
+            output += matrix_to_pair(mtx)
+        return output 
+
 
 if __name__ == '__main__':
     task = Task()
