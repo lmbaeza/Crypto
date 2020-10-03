@@ -112,5 +112,3 @@ if __name__ == '__main__':
     print("Encrypt:", encrypt)
     decrypt = handle.decrypt(encrypt)
     print("Decrypt:", decrypt)
-    
-
