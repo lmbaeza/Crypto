@@ -25,6 +25,9 @@ def bin_int(binary):
 class OneTimePad:
     
     def encrypt(self, txt, key):
+        txt = txt.replace(" ", "")
+        txt = txt.upper()
+
         txt_bin = ""
         key_bin = ""
         
@@ -76,18 +79,16 @@ class OneTimePad:
             output += chr(bin_int(bin_chr) + ord('A'))
         return output
 
+if __name__ == '__main__':
+    message = "SOME MESSAGE"
 
-message = input()
-message = message.replace(" ", "")
-message = message.upper()
+    key = ""
+    for i in range(len(message)):
+        key += random_char('A', 'Z')
 
-key = ""
-for i in range(len(message)):
-    key += random_char('A', 'Z')
+    cipher = OneTimePad()
 
-cipher = OneTimePad()
-
-encrypt = cipher.encrypt(message, key)
-print("Encrypt:", encrypt)
-decrypt = cipher.decrypt(encrypt, key)
-print("Decrypt:", decrypt)
+    encrypt = cipher.encrypt(message, key)
+    print("Encrypt:", encrypt)
+    decrypt = cipher.decrypt(encrypt, key)
+    print("Decrypt:", decrypt)
