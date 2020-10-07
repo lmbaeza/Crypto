@@ -15,7 +15,7 @@ class Input:
         return func(next(it))
 
 pin = Input() # Python Input (pin)
-    
+
 LOCAL = environ.get("LOCAL")
 
 def local(func):
