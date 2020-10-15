@@ -126,4 +126,7 @@ if __name__ == '__main__':
     x = [1, 12, -4]
     y = [4, 0, 23]
     print(poly_mul(x, y))
-    print(poly_divmod(x, y))
+    ans = poly_divmod(x, y)
+    print(ans)
+    print(poly_add(poly_mul(y, ans[0]), ans[1]))
+    print(array(x)%MOD)
